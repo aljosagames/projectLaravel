@@ -5,7 +5,7 @@ class User {
   password_confirmation = "";
   apiUrl = "http://laravel-api.test/api/";
 
-  register() {
+  async register() {
     let data = {
       name: this.name,
       email: this.email,
@@ -15,19 +15,20 @@ class User {
 
     data = JSON.stringify(data);
 
-    fetch(this.apiUrl + "user/register", {
-      method: "POST",
-      headers: {
-        "Contenty-Type": "application/json",
-      },
-      body: data,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return true;
-      })
-      .catch((error) => {
-        return false;
+    try {
+      const response = await fetch(this.apiUrl + "user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: data,
       });
+
+      const responseData = await response.json();
+      return responseData; // Return the data received from the API
+    } catch (error) {
+      console.error("Error occurred during registration:", error);
+      return null; // Or you can return some default value if the registration fails
+    }
   }
 }
