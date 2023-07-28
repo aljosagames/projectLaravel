@@ -24,10 +24,10 @@ class User {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        return true;
       })
       .catch((error) => {
-        console.log(error);
+        return false;
       });
   }
 }
