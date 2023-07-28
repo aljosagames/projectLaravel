@@ -14,5 +14,5 @@ registerForm.addEventListener("submit", (el) => {
   user.email = email;
   user.password = password;
   user.password_confirmation = password_confirmation;
-  user.register();
+  user.register().then();
 });
