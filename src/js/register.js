@@ -10,8 +10,12 @@ registerForm.addEventListener("submit", (el) => {
     "#password_confirmation"
   ).value;
   const inputs = registerForm.querySelectorAll(".is-null");
+  const feedbacks = registerForm.querySelectorAll(".invalid-feedback");
   inputs.forEach((input) => {
     input.classList.remove("is-invalid", "is-valid");
+  });
+  feedbacks.forEach((feedback) => {
+    feedback.innerText = "";
   });
 
   user.name = name;
@@ -23,10 +27,16 @@ registerForm.addEventListener("submit", (el) => {
       inputs.forEach((input) => {
         input.classList.add("is-valid");
       });
+      window.location.href = "/";
     } else {
       let errors = data.errors;
       Object.keys(errors).forEach((key) => {
         registerForm.querySelector(`#${key}`).classList.add("is-invalid");
+        errors[key].forEach((error) => {
+          registerForm.querySelector(
+            `.${key}-feedback`
+          ).innerText += `${error}\n`;
+        });
       });
       inputs.forEach((input) => {
         if (!input.classList.contains("is-invalid")) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
@@ -28,5 +29,32 @@ class UserController extends Controller
                 'errors' => $error->errors(),
             ], 422);
         }
+    }
+
+    public function login(Request $request){
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]); 
+
+        $form = $request->only('email', 'password');
+
+        if(Auth::attempt($form)){
+            $user = Auth::user();
+            // $token = $user->createToken('token')->plainTextToken;
+            return response()->json([
+                'error' => false,
+                'user' => $user
+            ], 200);
+        }
+
+        $error = ValidationException::withMessages([
+            'email' => ['Email or password is incorrect'],
+        ]);
+
+        return response()->json([
+            'error' => true,
+            'errors' => $error->errors()
+        ], 422);
     }
 }
