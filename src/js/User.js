@@ -3,7 +3,7 @@ class User {
   email = "";
   password = "";
   password_confirmation = "";
-  apiUrl = "http://laravel-api.test/api/user/";
+  apiUrl = "http://127.0.0.1:8000/api/user/";
 
   async register() {
     let data = {
@@ -46,7 +46,6 @@ class User {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         },
         body: data,
       });
