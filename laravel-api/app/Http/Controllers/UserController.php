@@ -32,29 +32,41 @@ class UserController extends Controller
     }
 
     public function login(Request $request){
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]); 
-
-        $form = $request->only('email', 'password');
-
-        if(Auth::attempt($form)){
-            $user = Auth::user();
-            // $token = $user->createToken('token')->plainTextToken;
+        try{
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]); 
+    
+            $form = $request->only('email', 'password');
+    
+            if(Auth::attempt($form)){
+                $user = Auth::user();
+                // $token = $user->createToken('token')->plainTextToken;
+                return response()->json([
+                    'error' => false,
+                    'user' => $user
+                ], 200);
+            }else{
+                $error =[
+                    'email' => ['Email or password is incorrect'],
+                ];
+        
+                return response()->json([
+                    'error' => true,
+                    'errors' => $error
+                ], 422);
+            }
+            
+        }catch(ValidationException $error){
+            $error =[
+                'email' => ['Email or password is incorrect'],
+            ];
+    
             return response()->json([
-                'error' => false,
-                'user' => $user
-            ], 200);
+                'error' => true,
+                'errors' => $error
+            ], 422);
         }
-
-        $error = ValidationException::withMessages([
-            'email' => ['Email or password is incorrect'],
-        ]);
-
-        return response()->json([
-            'error' => true,
-            'errors' => $error->errors()
-        ], 422);
     }
 }
