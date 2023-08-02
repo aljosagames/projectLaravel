@@ -17,11 +17,16 @@ class UserController extends Controller
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|min:6|confirmed',
             ]);
-            User::create($formValidate);
+            $user = User::create($formValidate);
+            $user->assignRole('user');
 
             return response()->json([
                 'error' => false,
-                'message' => 'User registered successfully'
+                'user_id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'token' => $user->createToken('Token')->plainTextToken,
+                'role' => $user->roles[0]->name
             ], 201);
         }catch(ValidationException $error){
             return response()->json([
@@ -42,10 +47,13 @@ class UserController extends Controller
     
             if(Auth::attempt($form)){
                 $user = Auth::user();
-                // $token = $user->createToken('token')->plainTextToken;
                 return response()->json([
                     'error' => false,
-                    'user' => $user
+                    'user_id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'token' => $user->createToken('Token')->plainTextToken,
+                    'role' => $user->roles[0]->name
                 ], 200);
             }else{
                 $error =[

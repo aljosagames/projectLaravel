@@ -23,6 +23,7 @@ registerForm.addEventListener("submit", (el) => {
   user.password = password;
   user.password_confirmation = password_confirmation;
   user.register().then((data) => {
+    console.log(data);
     if (data.error === false) {
       inputs.forEach((input) => {
         input.classList.add("is-valid");
